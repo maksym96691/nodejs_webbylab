@@ -1,12 +1,18 @@
 const express = require("express");
 const sequelize = require("./database");
+const syncModels = require("./models/sequelize/index");
 
-sequelize.sync().then(() => console.log("Db is ready"));
+console.log(syncModels);
+
+sequelize
+  .sync()
+  .then(() => console.log("Db is ready"))
+  .then(() => syncModels(sequelize));
 
 const app = express();
 
-app.get("/", (req, res) => {
-  res.send("Hello world!");
+app.get("/:id", (req, res) => {
+  res.send("hello world");
 });
 
 app.listen(3000, () => {
