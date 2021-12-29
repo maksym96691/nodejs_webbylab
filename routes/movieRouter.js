@@ -14,6 +14,7 @@ module.exports = (params) => {
 
 async function validation(req, res, next) {
   let actorValidationError = null;
+  let actorArray = [];
   try {
     let movieValidated = await MovieValidator.validateAsync({
       title: req.body.title,
@@ -36,8 +37,10 @@ async function validation(req, res, next) {
         firstName: first,
         lastName: last,
       });
+      actorArray.push(actor);
     }
 
+    res.locals.actors = actorArray;
     next();
   } catch (err) {
     console.log(err);

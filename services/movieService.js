@@ -10,14 +10,25 @@ class MovieService {
     if (oldMovie) {
       doesExist = true;
     } else {
-      newMovie = await Movie.create({
+      (newMovie = await Movie.create({
         title: params.title,
         year: params.year,
         format: params.format,
-      });
+      })),
+        {
+          include: Actor,
+        };
     }
 
     return [newMovie, doesExist];
+  }
+
+  static async findByTitle(title) {
+    const movie = await Movie.findOne({
+      where: { title: title },
+      include: Actor, // TODO: FIX this later. Sequelize doesn't seem to preload actors with the movie even though the docs say so and there is valid data in junction table.
+    });
+    return movie;
   }
 }
 
