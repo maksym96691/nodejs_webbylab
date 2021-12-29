@@ -40,6 +40,7 @@ async function validation(req, res, next) {
       actorArray.push(actor);
     }
 
+    // pass actors to the next function so that I can bind each actor to the correspondent movie
     res.locals.actors = actorArray;
     next();
   } catch (err) {

@@ -1,3 +1,4 @@
+require("dotenv").config();
 const User = require("../models/sequelize/User.js");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
@@ -30,13 +31,14 @@ class UserService {
 
       const token = jwt.sign(
         { user_id: user._id, email },
-        "FOPISDPOFSIDF123213135435345435",
+        process.env.JWT_SECRET,
         {
           expiresIn: "2h",
         }
       );
       // save user token
       user.token = token;
+
       // user.save();
       // return new user
       //   res.status(201).json(user);
