@@ -3,11 +3,12 @@ const MovieController = require("../controllers/movieController");
 const MovieValidator = require("../validators/movie_schema");
 const ActorValidator = require("../validators/actor_schema");
 const ActorService = require("../services/actorService.js");
+const auth = require("../middleware/auth.js");
 
 const router = express.Router();
 
 module.exports = (params) => {
-  router.post("/", validation, MovieController.insertMovie);
+  router.post("/", auth, validation, MovieController.insertMovie);
 
   return router;
 };
