@@ -7,5 +7,5 @@ module.exports = (sequelize) => {
   Movie.belongsToMany(Actor, { through: "movie_actors" });
   Actor.belongsToMany(Movie, { through: "movie_actors" });
 
-  sequelize.sync({});
+  sequelize.sync({ force: true });
 };
