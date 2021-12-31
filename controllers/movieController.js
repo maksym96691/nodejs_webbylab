@@ -1,27 +1,13 @@
 const Movie = require("../models/sequelize/Movie");
 const MovieService = require("../services/movieService.js");
-
-// async function setupAssociations(res, movie) {
-//   res.locals.actors.forEach((actor) => {
-//     await movie.addActor(actor);
-//   });
-// }
+const MovieSerializer = require("../serializers/movieSerializer.js");
 
 module.exports.insertMovie = async (req, res) => {
-  console.log("111111111111", req.body);
   let [movie, doesExist] = await MovieService.insert(req.body);
   if (doesExist) {
     // await setupAssociations(res, movie);
 
-    res.send({
-      status: 0,
-      error: {
-        fields: {
-          title: "NOT_UNIQUE",
-        },
-        code: "MOVIE_EXISTS",
-      },
-    });
+    res.send(MovieSerializer.movieExists);
   } else {
     res.locals.actors.forEach(async (actor) => {
       await movie.addActor(actor);
@@ -30,5 +16,25 @@ module.exports.insertMovie = async (req, res) => {
     movie = await MovieService.findByTitle(movie.dataValues.title);
     console.log("AFTER ADDING ACTORS", movie);
     res.send(movie);
+  }
+};
+
+module.exports.deleteMovie = async (req, res) => {
+  const movie = await MovieService.delete(req.params.id);
+  if (movie) {
+    return res.send(MovieSerializer.movieDeletedSuccessfully);
+  } else {
+    return res.status(404).send(MovieSerializer.movieNotFound(req.params.id));
+  }
+};
+
+module.exports.showMovie = async (req, res) => {
+  const movie = await MovieService.show(req.params.id);
+
+  if (movie) {
+    console.log("MOVIE:", movie);
+    return res.send(MovieSerializer.showMovie(movie));
+  } else {
+    return res.status(404).send(MovieSerializer.movieNotFound(req.params.id));
   }
 };

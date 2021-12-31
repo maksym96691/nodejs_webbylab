@@ -30,6 +30,20 @@ class MovieService {
     });
     return movie;
   }
+
+  static async delete(id) {
+    const movie = await Movie.findOne({ where: { id: id } });
+    if (movie) {
+      await movie.destroy();
+    }
+
+    return movie;
+  }
+
+  static async show(id) {
+    const movie = await Movie.findOne({ where: { id: id }, include: Actor });
+    return movie;
+  }
 }
 
 module.exports = MovieService;
