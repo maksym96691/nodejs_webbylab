@@ -44,6 +44,32 @@ class MovieService {
     const movie = await Movie.findOne({ where: { id: id }, include: Actor });
     return movie;
   }
+
+  static async update(body, id, actors) {
+    console.log(body, id);
+    const movie = await Movie.findOne({ where: { id: id }, include: Actor });
+
+    // console.log("MOVIE PREV ACTORS", movie.dataValues["Actors"]);
+
+    movie.set({
+      title: body.title,
+      year: body.year,
+      format: body.format,
+    });
+
+    movie.dataValues["Actors"].forEach(async (actor) => {
+      await actor.removeMovie(movie);
+    });
+
+    actors.forEach(async (actor) => {
+      console.log("Adding actor to movie");
+      await movie.addActor(actor);
+    });
+
+    await movie.save();
+
+    return movie;
+  }
 }
 
 module.exports = MovieService;
