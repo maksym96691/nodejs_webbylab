@@ -74,8 +74,10 @@ class MovieService {
   static async showAll(params) {
     // const movie = await Movie.findOne({ where: { id: id }, include: Actor });
     // return movie;
-    const { sort, order, offset, limit, actor, search } = params;
+    let { sort, order, offset, limit, actor, search } = params;
     let movies = await Movie.findAll();
+
+    // Actor
 
     // Sort
     switch (sort) {
@@ -98,9 +100,26 @@ class MovieService {
         break;
     }
 
-    // order
+    // Search - didn't understand what has to be here. Combined search (movie + actor). What does it mean?
+
+    // Order
 
     if (order == "DESC") movies.reverse();
+
+    // Offset
+
+    if (offset) {
+      offset = parseInt(offset);
+      console.log("MOVIES BEFORE", movies);
+      movies = movies.slice(offset);
+      console.log("MOVIES AFTER", movies);
+    }
+    // Limit
+
+    limit = parseInt(limit);
+    if (limit < movies.length) {
+      movies.splice(limit);
+    }
 
     console.log("MOVIES", movies);
     return movies;
