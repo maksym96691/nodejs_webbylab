@@ -1,4 +1,5 @@
 const Movie = require("../models/sequelize/Movie.js");
+const { Op } = require("sequelize");
 const Actor = require("../models/sequelize/Actor.js");
 const ActorService = require("./actorService.js");
 
@@ -74,8 +75,43 @@ class MovieService {
   static async showAll(params) {
     // const movie = await Movie.findOne({ where: { id: id }, include: Actor });
     // return movie;
-    let { sort, order, offset, limit, actor, search } = params;
+    let { sort, order, offset, limit, actor, title } = params;
     let movies = await Movie.findAll();
+
+    if (actor) {
+      let [firstName, lastName] = actor.split(" ");
+      movies = await Movie.findAll({
+        include: {
+          model: Actor,
+          as: "Actors",
+          where: {
+            [Op.or]: [
+              {
+                firstName: {
+                  [Op.substring]: firstName,
+                },
+              },
+              {
+                lastName: {
+                  [Op.substring]: lastName,
+                },
+              },
+            ],
+          },
+        },
+      });
+    }
+
+    if (title) {
+      movies = await Movie.findAll({
+        where: {
+          title: {
+            [Op.substring]: title,
+          },
+        },
+        include: Actor,
+      });
+    }
 
     // Actor
 
@@ -121,7 +157,6 @@ class MovieService {
       movies.splice(limit);
     }
 
-    console.log("MOVIES", movies);
     return movies;
     // console.log("PARAMS", params);
   }
