@@ -55,3 +55,16 @@ module.exports.updateMovie = async (req, res) => {
     return res.status(404).send("There is no movie with such an id");
   }
 };
+
+module.exports.getMovies = async (req, res) => {
+  const movies = await MovieService.showAll(req.query);
+  res.send(movies);
+  // const movie = await MovieService.show(req.params.id);
+
+  // if (movie) {
+  //   console.log("MOVIE:", movie);
+  //   return res.send(MovieSerializer.showMovie(movie));
+  // } else {
+  //   return res.status(404).send(MovieSerializer.movieNotFound(req.params.id));
+  // }
+};

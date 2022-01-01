@@ -70,6 +70,42 @@ class MovieService {
 
     return movie;
   }
+
+  static async showAll(params) {
+    // const movie = await Movie.findOne({ where: { id: id }, include: Actor });
+    // return movie;
+    const { sort, order, offset, limit, actor, search } = params;
+    let movies = await Movie.findAll();
+
+    // Sort
+    switch (sort) {
+      case "title":
+        movies.sort((e1, e2) => {
+          if (e1.title > e2.title) return 1;
+          else if (e1.title < e2.title) return -1;
+          else return 0;
+        });
+        break;
+      case "id":
+        movies.sort((e1, e2) => {
+          return e1.id - e2.id;
+        });
+        break;
+      default:
+        movies.sort((e1, e2) => {
+          return e1.year - e2.year;
+        });
+        break;
+    }
+
+    // order
+
+    if (order == "DESC") movies.reverse();
+
+    console.log("MOVIES", movies);
+    return movies;
+    // console.log("PARAMS", params);
+  }
 }
 
 module.exports = MovieService;

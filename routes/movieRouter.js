@@ -18,6 +18,7 @@ module.exports = (params) => {
   router.delete("/:id", auth, MovieController.deleteMovie);
   router.get("/:id", auth, MovieController.showMovie);
   router.patch("/:id", auth, validation, MovieController.updateMovie);
+  router.get("/", auth, MovieController.getMovies);
   router.post("/import", auth, upload.single("movies.txt"), (req, res) => {
     console.log("FILE", req.file);
     console.log("File", req.file.path);
