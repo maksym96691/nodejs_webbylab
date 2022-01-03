@@ -1,4 +1,3 @@
-const Movie = require("../models/sequelize/Movie.js");
 const Actor = require("../models/sequelize/Actor.js");
 
 class ActorService {

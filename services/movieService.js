@@ -1,7 +1,6 @@
 const Movie = require("../models/sequelize/Movie.js");
 const { Op } = require("sequelize");
 const Actor = require("../models/sequelize/Actor.js");
-const ActorService = require("./actorService.js");
 
 class MovieService {
   static async insert(params) {

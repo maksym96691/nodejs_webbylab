@@ -1,5 +1,5 @@
-const User = require("../models/sequelize/User");
 const UserService = require("../services/userService.js");
+const UserSerializer = require("../serializers/userSerializer.js");
 
 module.exports.register = async (req, res) => {
   const result = await UserService.register(req.body);
@@ -7,27 +7,13 @@ module.exports.register = async (req, res) => {
   switch (result) {
     case "All input is required":
     case "Passwords do not match. Try again":
-      res.status(400).send({
-        status: 0,
-        error: {
-          message: result,
-        },
-      });
+      res.status(400).send(UserSerializer.inputInvalid(result));
+      break;
     case "User Already Exist. Please Login":
-      res.status(400).send({
-        status: 0,
-        error: {
-          felds: {
-            email: "NOT_UNIQUE",
-          },
-          code: "USER_NOT_UNIQUE",
-        },
-      });
+      res.status(400).send(UserSerializer.userExists());
       break;
     default:
-      res.status(201).json({
-        token: result.token,
-        status: 1,
-      });
+      res.status(201).send(UserSerializer.userCreated(result));
+      break;
   }
 };

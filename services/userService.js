@@ -7,7 +7,6 @@ class UserService {
   static async register(params) {
     try {
       const { name, email, password, confirmPassword } = params;
-      console.log("EMAIl", email);
       if (!(email && password && name && confirmPassword)) {
         return "All input is required";
       }
@@ -16,7 +15,6 @@ class UserService {
       }
 
       const oldUser = await User.findOne({ where: { email: email } });
-      console.log("OLD USER XD", oldUser);
       if (oldUser) {
         return "User Already Exist. Please Login";
       }
@@ -36,12 +34,9 @@ class UserService {
           expiresIn: "2h",
         }
       );
-      // save user token
+
       user.token = token;
 
-      // user.save();
-      // return new user
-      //   res.status(201).json(user);
       return user;
     } catch (err) {
       console.log(err);
