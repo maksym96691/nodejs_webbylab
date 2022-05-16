@@ -3,10 +3,9 @@ const ActorValidator = require("../validators/actor_schema");
 const ActorService = require("../services/actorService.js");
 
 const validation = async (req, res, next) => {
-  let actorValidationError = null;
   let actorArray = [];
   try {
-    let movieValidated = await MovieValidator.validateAsync({
+    await MovieValidator.validateAsync({
       title: req.body.title,
       year: req.body.year,
       format: req.body.format,
@@ -14,8 +13,7 @@ const validation = async (req, res, next) => {
 
     for (let i = 0; i < req.body.actors.length; i++) {
       let [first, last] = req.body.actors[i].split(" ");
-      console.log(first, last);
-      let actorValidated = await ActorValidator.validateAsync({
+      await ActorValidator.validateAsync({
         firstName: first,
         lastName: last,
       });
@@ -34,10 +32,8 @@ const validation = async (req, res, next) => {
     res.locals.actors = actorArray;
     next();
   } catch (err) {
-    console.log(err);
     res.send({ data: err.details[0].message });
   }
-  // console.log("MOVIE VALIDATION ERROR", movieValidationError);
 };
 
 module.exports = validation;

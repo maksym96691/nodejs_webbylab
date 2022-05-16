@@ -7,10 +7,6 @@ const userRouter = require("./userRouter");
 const router = express.Router();
 
 module.exports = (params) => {
-  router.get("/", async (req, res, next) => {
-    res.send("test");
-  });
-
   router.use("/movies", movieRouter(params));
   router.use("/users", userRouter(params));
   router.use("/sessions", sessionRouter(params));
